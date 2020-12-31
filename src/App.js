@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 export default function App() {
   return (
@@ -11,14 +11,11 @@ export default function App() {
 }
 let contextData = 'hello';
 const Context = React.createContext(contextData);
-function onChange() {
-  contextData = 'goodbye';
-  Context._currentValue = 'goodbye';
-  console.log(contextData);
-}
+
 function LevelOne() {
+  const [contextData, setContextData] = useState('hello');
   return (
-    <Context.Provider value={contextData}>
+    <Context.Provider value={{ contextData, setContextData }}>
       <LevelTwo />
     </Context.Provider>
   );
@@ -27,12 +24,11 @@ function LevelTwo() {
   return <LevelThree />;
 }
 function LevelThree() {
-  const context = useContext(Context);
+  const { contextData, setContextData } = useContext(Context);
   return (
     <div>
-      {' '}
-      <button onClick={onChange}>Change context</button>
-      {context}
+      <button onClick={() => setContextData('goodbye')}>Change context</button>
+      {contextData}
     </div>
   );
 }
