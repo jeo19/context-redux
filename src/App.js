@@ -9,21 +9,28 @@ export default function App() {
     </div>
   );
 }
-let contextData = 'hello';
-const Context = React.createContext(contextData);
+
+const Context = React.createContext();
+let levelOneCalls = 0;
+let levelTwoCalls = 0;
+let levelThreeCalls = 0;
 
 function LevelOne() {
   const [contextData, setContextData] = useState('hello');
+  console.log(`Level One calls:${++levelOneCalls}`);
   return (
     <Context.Provider value={{ contextData, setContextData }}>
-      <LevelTwo />
+      <MemoLevelTwo />
     </Context.Provider>
   );
 }
 function LevelTwo() {
-  return <LevelThree />;
+  console.log(`Level Two calls: ${++levelTwoCalls}`);
+  return <MemoLevelThree />;
 }
+const MemoLevelTwo = React.memo(LevelTwo);
 function LevelThree() {
+  console.log(`Level three calls: ${++levelThreeCalls}`);
   const { contextData, setContextData } = useContext(Context);
   return (
     <div>
@@ -32,3 +39,4 @@ function LevelThree() {
     </div>
   );
 }
+const MemoLevelThree = React.memo(LevelThree);
